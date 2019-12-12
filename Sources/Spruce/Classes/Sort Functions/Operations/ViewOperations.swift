@@ -51,14 +51,13 @@ public extension Spruce {
         case let tableView as UITableView:
             subviews = tableView.visibleCells
             if let indexPaths = tableView.indexPathsForVisibleRows {
-                let sections = Set(indexPaths.map({$0.section}))
-                let sectionHeaders = sections.map({tableView.headerView(forSection: $0)}).filter({$0 != nil}).map({$0!})
+                let sectionHeaders = Set(indexPaths.map { $0.section }).compactMap { tableView.headerView(forSection: $0) }
                 subviews.append(contentsOf: sectionHeaders as [UIView])
             }
         case let collectionView as UICollectionView:
             subviews = collectionView.visibleCells
             if #available(iOS 9.0, *) {
-                if collectionView.numberOfSections > 0 {
+                if collectionView.numberOfSections > 0 && !collectionView.visibleCells.isEmpty {
                     let sectionHeaders = collectionView.visibleSupplementaryViews(ofKind: UICollectionView.elementKindSectionHeader)
                     subviews.append(contentsOf: sectionHeaders as [UIView])
                 }
